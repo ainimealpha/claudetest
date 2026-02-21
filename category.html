@@ -2,226 +2,229 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#06040f">
   <title>Categories — Gallery Codex</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .cat-hero {
-      padding: 60px 0 32px;
-      text-align: center;
+    .cat-hero{padding:32px 0 22px;text-align:center}
+    .cat-hero h1{
+      font-family:var(--font-disp);font-size:clamp(1.6rem,6vw,3rem);
+      background:linear-gradient(135deg,var(--primary2),var(--accent2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      margin-bottom:8px;animation:fadeUp .5s var(--ease-s) both;
     }
-    .cat-hero h1 {
-      font-family: var(--font-disp);
-      font-size: clamp(1.8rem, 6vw, 3.5rem);
-      background: linear-gradient(135deg, var(--primary2), var(--accent2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 12px;
-      animation: fadeUp 0.5s var(--ease-smooth) both;
-    }
-    .cat-hero p {
-      color: var(--text2); font-size: 0.95rem; max-width: 440px; margin: 0 auto 28px;
-      animation: fadeUp 0.5s var(--ease-smooth) 0.1s both;
-    }
-    .cat-search-wrap {
-      max-width: 400px; margin: 0 auto;
-      animation: fadeUp 0.5s var(--ease-smooth) 0.2s both;
-    }
+    .cat-hero p{color:var(--text2);font-size:.88rem;max-width:360px;margin:0 auto 20px;animation:fadeUp .5s var(--ease-s) .1s both}
+    .cat-search-wrap{max-width:380px;margin:0 auto;animation:fadeUp .5s var(--ease-s) .2s both}
 
-    /* Category detail panel */
-    .cat-detail {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      margin-bottom: 28px;
-      display: none;
+    .cat-detail{
+      background:var(--surface);border:1px solid var(--border2);
+      border-radius:var(--radius-lg);padding:16px;margin-bottom:22px;display:none;
     }
-    .cat-detail.visible { display: block; animation: fadeUp 0.4s var(--ease-smooth) both; }
-    .cat-detail-top {
-      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    .cat-detail.visible{display:block;animation:fadeUp .4s var(--ease-s) both}
+    .cat-back{
+      color:var(--text2);font-size:.8rem;cursor:pointer;transition:color .2s;
+      font-family:var(--font-head);letter-spacing:.05em;
+      margin-bottom:14px;display:inline-flex;align-items:center;gap:4px;
+      min-height:36px;
     }
-    .cat-detail-icon { font-size: 2.5rem; }
-    .cat-detail-name {
-      font-family: var(--font-head); font-size: 1.4rem; font-weight: 700;
-      color: var(--primary2); letter-spacing: 0.08em;
-    }
-    .cat-detail-count { color: var(--text3); font-size: 0.85rem; }
-    .cat-back {
-      color: var(--text2); font-size: 0.82rem; cursor: pointer;
-      transition: color 0.2s;
-      font-family: var(--font-head); letter-spacing: 0.06em;
-      margin-bottom: 20px; display: inline-block;
-    }
-    .cat-back:hover { color: var(--primary2); }
+    .cat-back:hover{color:var(--primary2)}
+    .cat-detail-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .cat-detail-icon{font-size:2rem}
+    .cat-detail-name{font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:var(--primary2);letter-spacing:.06em}
+    .cat-detail-count{color:var(--text3);font-size:.8rem}
   </style>
 </head>
 <body>
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
+<div id="loadingScreen">
+  <div class="loader-outer">
+    <div class="loader-ring lr1"></div><div class="loader-ring lr2"></div>
+    <div class="loader-logo">✦</div>
   </div>
-  <div class="stars"></div>
+  <div class="loader-text">Gallery Codex</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
 
-  <nav class="nav">
-    <a class="nav-logo" href="index.html">✦ Gallery Codex</a>
-    <div class="nav-links">
-      <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link active" href="category.html">Categories</a>
-      <a class="nav-link" href="gallery.html">Gallery</a>
-    </div>
-    <a class="nav-btn" href="#" id="submitBtn">+ Submit</a>
-  </nav>
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+<div class="stars"></div>
 
-  <div class="page-wrap">
-    <div class="container">
+<nav class="nav">
+  <a class="nav-logo" href="index.html">✦ Codex</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link active" href="category.html">Categories</a>
+    <a class="nav-link" href="gallery.html">Gallery</a>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn refresh-btn" onclick="refreshPage()" title="Refresh">↻</button>
+    <button class="icon-btn theme-btn" onclick="toggleTheme()">☀️</button>
+    <a class="nav-submit" href="#" id="submitBtn">+ Submit</a>
+  </div>
+</nav>
 
-      <!-- Category Hero -->
-      <div class="cat-hero">
-        <h1>Browse by World</h1>
-        <p>Every realm has its own story. Choose a category and enter the universe that calls to you.</p>
-        <div class="cat-search-wrap">
-          <div class="search-wrap">
-            <input class="search-input" id="catSearch" type="text" placeholder="Find a category…">
-            <span class="search-icon">🔍</span>
-          </div>
+<div class="page-wrap">
+  <div class="container">
+
+    <div class="cat-hero">
+      <h1>Browse by World</h1>
+      <p>Every realm has its own story. Choose a category and enter the universe that calls to you.</p>
+      <div class="cat-search-wrap">
+        <div class="search-wrap">
+          <input class="search-input" id="catSearch" type="text" placeholder="Find a category…" autocomplete="off">
+          <span class="search-icon">🔍</span>
         </div>
       </div>
-
-      <!-- Category detail (shown when a category is selected) -->
-      <div class="cat-detail" id="catDetail">
-        <span class="cat-back" id="catBack">← Back to All Categories</span>
-        <div class="cat-detail-top">
-          <div class="cat-detail-icon" id="detailIcon"></div>
-          <div>
-            <div class="cat-detail-name" id="detailName"></div>
-            <div class="cat-detail-count" id="detailCount"></div>
-          </div>
-        </div>
-        <div class="section-title" style="margin-bottom:16px;">Works in this Category</div>
-        <div class="card-grid" id="catDetailGrid"></div>
-        <button class="load-more hidden" id="catLoadMore">Load More ↓</button>
-      </div>
-
-      <!-- Big category cards -->
-      <div class="reveal">
-        <div class="section-title" style="margin-bottom:18px;">✦ All Categories</div>
-        <div class="cat-big-grid" id="catBigGrid"></div>
-      </div>
-
-      <div class="spacer"></div>
     </div>
-    <footer>
-      <div class="logo">✦ Gallery Codex</div>
-      <p>All art belongs to their respective artists.</p>
-    </footer>
+
+    <!-- Category detail panel -->
+    <div class="cat-detail" id="catDetail">
+      <button class="cat-back" id="catBack">← Back</button>
+      <div class="cat-detail-top">
+        <div class="cat-detail-icon" id="detailIcon"></div>
+        <div>
+          <div class="cat-detail-name" id="detailName"></div>
+          <div class="cat-detail-count" id="detailCount"></div>
+        </div>
+      </div>
+      <div class="section-title" style="margin-bottom:12px">Works</div>
+      <div class="card-grid" id="catDetailGrid"></div>
+      <div class="empty-state hidden" id="catEmpty"><div class="icon">🌙</div><div>No works yet.</div></div>
+      <button class="load-more hidden" id="catLoadMore">Load More ↓</button>
+    </div>
+
+    <!-- Big category cards -->
+    <div class="reveal">
+      <div class="section-title" style="margin-bottom:14px">✦ All Categories</div>
+      <div class="cat-big-grid" id="catBigGrid"></div>
+      <div class="empty-state hidden" id="catGridEmpty"><div class="icon">🌌</div><div>No categories found.</div></div>
+    </div>
+
+    <div class="spacer"></div>
   </div>
+  <footer>
+    <div class="logo">✦ Gallery Codex</div>
+    <p>All art belongs to their respective artists.</p>
+  </footer>
+</div>
 
-  <script src="config.js"></script>
-  <script src="script.js"></script>
-  <script>
-    let ALL_DATA = [];
-    let selectedCat = null;
-    let catPage = 0;
-    let catFiltered = [];
-    const PER_PAGE = CONFIG.itemsPerPage;
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bnav-item" href="index.html"><span class="bnav-icon">🏠</span>Home</a>
+    <a class="bnav-item active" href="category.html"><span class="bnav-icon">🗂️</span>Categories</a>
+    <a class="bnav-item" href="gallery.html"><span class="bnav-icon">🖼️</span>Gallery</a>
+    <button class="bnav-item" onclick="toggleTheme()"><span class="bnav-icon">☀️</span>Theme</button>
+  </div>
+</nav>
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      ALL_DATA = await loadGalleryData();
-      buildCatGrid(ALL_DATA);
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+  let ALL_DATA = [];
+  let catFiltered = [];
+  let catPage = 0;
+  const PER = CONFIG.itemsPerPage;
 
-      document.getElementById("submitBtn").href = CONFIG.FORM_URL;
+  async function init() {
+    ALL_DATA = await loadGalleryData();
+    buildCatGrid(ALL_DATA);
+    document.getElementById("submitBtn").href = CONFIG.FORM_URL;
+  }
 
-      document.getElementById("catSearch").addEventListener("input", e => {
-        const q = e.target.value.toLowerCase().trim();
-        buildCatGrid(ALL_DATA, q);
-      });
+  document.addEventListener("DOMContentLoaded", () => {
+    init();
 
-      document.getElementById("catBack").addEventListener("click", () => {
-        document.getElementById("catDetail").classList.remove("visible");
-        selectedCat = null;
-      });
-
-      document.getElementById("catLoadMore").addEventListener("click", () => {
-        catPage++;
-        loadCatPage(true);
-      });
+    document.getElementById("catSearch").addEventListener("input", e => {
+      const q = e.target.value.toLowerCase().trim();
+      buildCatGrid(ALL_DATA, q);
     });
 
-    // Gather unique categories + count
-    function getCatMeta(data) {
-      const map = {};
-      data.forEach(d => {
-        if (!d.category) return;
-        if (!map[d.category]) map[d.category] = 0;
-        map[d.category]++;
-      });
-      return map;
+    document.getElementById("catBack").addEventListener("click", () => {
+      document.getElementById("catDetail").classList.remove("visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("catLoadMore").addEventListener("click", () => {
+      catPage++; loadCatPage(true);
+    });
+
+    window.addEventListener("codex:refresh", () => init());
+  });
+
+  function getCatMeta(data) {
+    const map = {};
+    data.forEach(d => {
+      if (!d.category) return;
+      map[d.category] = (map[d.category] || 0) + 1;
+    });
+    return map;
+  }
+
+  function buildCatGrid(data, filter = "") {
+    const grid = document.getElementById("catBigGrid");
+    const emptyEl = document.getElementById("catGridEmpty");
+    grid.innerHTML = "";
+    const meta = getCatMeta(data);
+    const cats = Object.keys(meta).filter(c => c.toLowerCase().includes(filter));
+
+    if (cats.length === 0) {
+      emptyEl.classList.remove("hidden"); return;
     }
+    emptyEl.classList.add("hidden");
 
-    function buildCatGrid(data, filter = "") {
-      const grid = document.getElementById("catBigGrid");
-      grid.innerHTML = "";
-      const meta = getCatMeta(data);
-      const cats = Object.keys(meta).filter(c => c.toLowerCase().includes(filter));
-
-      // Build category cards using first artwork image as background
-      cats.forEach((cat, i) => {
-        const thumb = data.find(d => d.category === cat)?.image ||
-                      `https://picsum.photos/seed/cat_${cat}/400/400`;
-        const catMeta = CONFIG.categories.find(c => c.id === cat);
-        const icon = catMeta ? catMeta.icon : "🎴";
-
-        const card = document.createElement("div");
-        card.className = "cat-big-card";
-        card.style.animationDelay = `${i * 0.06}s`;
-        card.innerHTML = `
-          <img src="${thumb}" alt="${cat}" loading="lazy"
-               onerror="this.src='https://picsum.photos/seed/cat${i}/400/400'">
-          <div class="cat-big-label">
-            <div class="cat-big-icon">${icon}</div>
-            <div class="cat-big-name">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
-            <div class="cat-big-count">${meta[cat]} work${meta[cat] !== 1 ? "s" : ""}</div>
-          </div>
-        `;
-        card.addEventListener("click", () => openCategory(cat, meta[cat], icon));
-        grid.appendChild(card);
-      });
-
-      if (cats.length === 0) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-          <div class="icon">🌌</div><div>No categories match your search.</div>
+    cats.forEach((cat, i) => {
+      const thumb = data.find(d => d.category === cat)?.image ||
+                    `https://picsum.photos/seed/cat${i}/400/400`;
+      const catMeta = CONFIG.categories.find(c => c.id === cat);
+      const icon = catMeta ? catMeta.icon : "🎴";
+      const card = document.createElement("div");
+      card.className = "cat-big-card";
+      card.style.animationDelay = `${i * 0.05}s`;
+      card.innerHTML = `
+        <img src="${thumb}" alt="${cat}" loading="lazy"
+             onerror="this.src='https://picsum.photos/seed/cat${i}x/400/400'">
+        <div class="cat-big-label">
+          <div class="cat-big-icon">${icon}</div>
+          <div class="cat-big-name">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+          <div class="cat-big-count">${meta[cat]} work${meta[cat]!==1?"s":""}</div>
         </div>`;
-      }
+      card.addEventListener("click", () => openCategory(cat, meta[cat], icon));
+      grid.appendChild(card);
+    });
+  }
+
+  function openCategory(cat, count, icon) {
+    catPage = 0;
+    catFiltered = ALL_DATA.filter(d => d.category === cat);
+
+    document.getElementById("detailIcon").textContent = icon;
+    document.getElementById("detailName").textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+    document.getElementById("detailCount").textContent = `${count} work${count!==1?"s":""}`;
+
+    const detail = document.getElementById("catDetail");
+    detail.classList.add("visible");
+    detail.scrollIntoView({ behavior: "smooth", block: "start" });
+    loadCatPage(false);
+  }
+
+  function loadCatPage(append) {
+    const grid = document.getElementById("catDetailGrid");
+    const loadBtn = document.getElementById("catLoadMore");
+    const emptyEl = document.getElementById("catEmpty");
+    if (!append) grid.innerHTML = "";
+
+    if (catFiltered.length === 0) {
+      emptyEl.classList.remove("hidden"); loadBtn.classList.add("hidden"); return;
     }
+    emptyEl.classList.add("hidden");
 
-    function openCategory(cat, count, icon) {
-      selectedCat = cat;
-      catPage = 0;
-      catFiltered = ALL_DATA.filter(d => d.category === cat);
+    const start = catPage * PER;
+    const slice = catFiltered.slice(start, start + PER);
+    slice.forEach((item, i) => grid.appendChild(buildCard(item, append ? i : start + i)));
 
-      const detail = document.getElementById("catDetail");
-      detail.classList.add("visible");
-      detail.scrollIntoView({ behavior: "smooth", block: "start" });
-
-      document.getElementById("detailIcon").textContent = icon;
-      document.getElementById("detailName").textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-      document.getElementById("detailCount").textContent = `${count} work${count !== 1 ? "s" : ""}`;
-
-      loadCatPage(false);
-    }
-
-    function loadCatPage(append) {
-      const grid = document.getElementById("catDetailGrid");
-      const loadBtn = document.getElementById("catLoadMore");
-      if (!append) grid.innerHTML = "";
-      const start = catPage * PER_PAGE;
-      const slice = catFiltered.slice(start, start + PER_PAGE);
-      slice.forEach((item, i) => grid.appendChild(buildCard(item, append ? i : start + i)));
-      const shown = Math.min((catPage + 1) * PER_PAGE, catFiltered.length);
-      if (shown < catFiltered.length) loadBtn.classList.remove("hidden");
-      else loadBtn.classList.add("hidden");
-    }
-  </script>
+    const shown = Math.min((catPage + 1) * PER, catFiltered.length);
+    if (shown < catFiltered.length) loadBtn.classList.remove("hidden");
+    else loadBtn.classList.add("hidden");
+  }
+</script>
 </body>
 </html>

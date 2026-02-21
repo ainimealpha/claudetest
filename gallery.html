@@ -2,345 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#06040f">
   <title>Gallery — Gallery Codex</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .gallery-hero {
-      padding: 52px 0 28px; text-align: center;
-    }
-    .gallery-hero h1 {
-      font-family: var(--font-disp);
-      font-size: clamp(1.8rem,6vw,3.2rem);
-      background: linear-gradient(135deg,var(--accent2),var(--primary2),var(--accent1));
+    .gallery-hero{padding:28px 0 20px;text-align:center}
+    .gallery-hero h1{
+      font-family:var(--font-disp);font-size:clamp(1.6rem,6vw,3rem);
+      background:linear-gradient(135deg,var(--accent2),var(--primary2),var(--accent1));
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      margin-bottom:10px;
-      animation: fadeUp 0.5s var(--ease-smooth) both;
+      margin-bottom:8px;animation:fadeUp .5s var(--ease-s) both;
     }
-    .gallery-hero p {
-      color:var(--text2);font-size:0.92rem;max-width:380px;margin:0 auto 24px;
-      animation: fadeUp 0.5s var(--ease-smooth) 0.1s both;
-    }
-
-    /* Toolbar */
-    .toolbar {
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-      margin-bottom:18px;
-    }
-    .toolbar .search-wrap { flex:1; min-width:180px; }
-    .sort-select {
-      padding:10px 14px;border-radius:99px;
-      background:var(--surface);border:1px solid var(--border);
-      color:var(--text);font-family:var(--font-body);font-size:0.85rem;
-      outline:none;cursor:pointer;transition:border-color 0.2s;
-    }
-    .sort-select:focus { border-color:var(--primary); }
-    .view-toggle {
-      display:flex;gap:4px;background:var(--surface);
-      border:1px solid var(--border);border-radius:99px;padding:4px;
-    }
-    .view-btn {
-      padding:6px 12px;border-radius:99px;font-size:0.82rem;
-      color:var(--text2);transition:all 0.2s;
-    }
-    .view-btn.active {
-      background:linear-gradient(135deg,var(--primary),var(--accent1));
-      color:#fff;
-    }
-
-    /* List view */
-    .card-list { display:flex;flex-direction:column;gap:12px; }
-    .list-card {
-      display:flex;gap:14px;align-items:center;
-      background:var(--surface);border:1px solid var(--border);
-      border-radius:var(--radius);overflow:hidden;cursor:pointer;
-      transition:all 0.25s var(--ease-smooth);
-      animation:cardIn 0.4s var(--ease-bounce) both;
-    }
-    .list-card:hover { border-color:var(--primary);box-shadow:var(--shadow),var(--glow); transform:translateX(4px); }
-    .list-card-img {
-      width:90px;height:90px;object-fit:cover;flex-shrink:0;
-    }
-    @media(min-width:480px){.list-card-img{width:110px;height:110px;}}
-    .list-card-info { flex:1;padding:12px 12px 12px 0; }
-    .list-card-title { font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:4px; }
-    .list-card-meta { font-size:0.78rem;color:var(--text2); }
-    .list-card-cat {
-      display:inline-block;margin-top:6px;padding:2px 10px;border-radius:99px;
-      background:rgba(176,111,255,0.12);border:1px solid var(--primary);
-      color:var(--primary2);font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
-    }
-    .list-card-like {
-      padding:10px 16px;color:var(--text3);font-size:1.1rem;
-      transition:color 0.2s;flex-shrink:0;margin-right:8px;
-    }
-    .list-card-like:hover { color:var(--accent1); }
-
-    /* Featured toggle banner */
-    .filter-banner {
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-      padding:12px 16px;border-radius:var(--radius);
-      background:var(--surface);border:1px solid var(--border);
-      margin-bottom:18px;
-    }
-    .filter-banner span { color:var(--text2);font-size:0.83rem;font-weight:600; }
-    .toggle-chip {
-      padding:5px 14px;border-radius:99px;font-size:0.78rem;font-weight:700;
-      background:transparent;border:1px solid var(--border);color:var(--text2);
-      transition:all 0.2s;cursor:pointer;
-    }
-    .toggle-chip.on {
-      background:linear-gradient(135deg,var(--primary),var(--accent1));
-      border-color:transparent;color:#fff;
-    }
+    .gallery-hero p{color:var(--text2);font-size:.88rem;max-width:340px;margin:0 auto;animation:fadeUp .5s var(--ease-s) .1s both}
+    .result-info{color:var(--text3);font-size:.78rem;margin-bottom:10px}
   </style>
 </head>
 <body>
-  <div class="bg-orbs">
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
+<div id="loadingScreen">
+  <div class="loader-outer">
+    <div class="loader-ring lr1"></div><div class="loader-ring lr2"></div>
+    <div class="loader-logo">✦</div>
   </div>
-  <div class="stars"></div>
+  <div class="loader-text">Gallery Codex</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
 
-  <nav class="nav">
-    <a class="nav-logo" href="index.html">✦ Gallery Codex</a>
-    <div class="nav-links">
-      <a class="nav-link" href="index.html">Home</a>
-      <a class="nav-link" href="category.html">Categories</a>
-      <a class="nav-link active" href="gallery.html">Gallery</a>
-    </div>
-    <a class="nav-btn" href="#" id="submitBtn">+ Submit</a>
-  </nav>
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+<div class="stars"></div>
 
-  <div class="page-wrap">
-    <div class="container">
+<nav class="nav">
+  <a class="nav-logo" href="index.html">✦ Codex</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="category.html">Categories</a>
+    <a class="nav-link active" href="gallery.html">Gallery</a>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn refresh-btn" onclick="refreshPage()" title="Refresh">↻</button>
+    <button class="icon-btn theme-btn" onclick="toggleTheme()">☀️</button>
+    <a class="nav-submit" href="#" id="submitBtn">+ Submit</a>
+  </div>
+</nav>
 
-      <div class="gallery-hero">
-        <h1>Full Gallery</h1>
-        <p>Every artwork in the Codex, all in one place. Search, sort, and explore.</p>
-      </div>
+<div class="page-wrap">
+  <div class="container">
 
-      <!-- Category pills -->
-      <div class="cat-pills reveal" id="catPills" style="margin-bottom:14px;"></div>
-
-      <!-- Filter banner -->
-      <div class="filter-banner reveal">
-        <span>Filter:</span>
-        <button class="toggle-chip" id="featuredChip" data-on="false">⭐ Featured Only</button>
-        <button class="toggle-chip" id="likedChip" data-on="false">♥ Liked Only</button>
-      </div>
-
-      <!-- Toolbar: search + sort + view toggle -->
-      <div class="toolbar reveal">
-        <div class="search-wrap">
-          <input class="search-input" id="gallerySearch" type="text" placeholder="Search anything…">
-          <span class="search-icon">🔍</span>
-        </div>
-        <select class="sort-select" id="sortSelect">
-          <option value="default">Sort: Default</option>
-          <option value="az">A → Z</option>
-          <option value="za">Z → A</option>
-          <option value="cat">By Category</option>
-          <option value="featured">Featured First</option>
-        </select>
-        <div class="view-toggle">
-          <button class="view-btn active" id="gridView">⊞ Grid</button>
-          <button class="view-btn" id="listView">☰ List</button>
-        </div>
-      </div>
-
-      <!-- Result count -->
-      <div style="color:var(--text3);font-size:0.82rem;margin-bottom:14px;" id="resultCount"></div>
-
-      <!-- Grid view -->
-      <div class="card-grid" id="mainGrid"></div>
-
-      <!-- List view (hidden by default) -->
-      <div class="card-list hidden" id="mainList"></div>
-
-      <div class="empty-state hidden" id="emptyState">
-        <div class="icon">🌙</div>
-        <div>No artworks match your filters.</div>
-      </div>
-
-      <button class="load-more hidden" id="loadMore">Load More ↓</button>
-      <div class="spacer"></div>
+    <div class="gallery-hero">
+      <h1>Full Gallery</h1>
+      <p>Every artwork, all in one place.</p>
     </div>
 
-    <footer>
-      <div class="logo">✦ Gallery Codex</div>
-      <p>All art belongs to their respective artists.</p>
-      <p style="margin-top:8px;">
-        <a href="#" id="footerForm" style="color:var(--primary2);">Submit your artwork →</a>
-      </p>
-    </footer>
+    <!-- Category pills -->
+    <div class="cat-pills reveal" id="catPills" style="margin-bottom:12px"></div>
+
+    <!-- Filter chips -->
+    <div class="filter-banner reveal">
+      <span>Filter:</span>
+      <button class="toggle-chip" id="featuredChip">⭐ Featured</button>
+      <button class="toggle-chip" id="likedChip">♥ Liked</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar reveal">
+      <div class="search-wrap">
+        <input class="search-input" id="gallerySearch" type="text" placeholder="Search anything…" autocomplete="off">
+        <span class="search-icon">🔍</span>
+      </div>
+      <select class="sort-select" id="sortSelect">
+        <option value="default">Sort: Default</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+        <option value="cat">By Category</option>
+        <option value="featured">Featured First</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridView">⊞</button>
+        <button class="view-btn" id="listView">☰</button>
+      </div>
+    </div>
+
+    <div class="result-info" id="resultCount"></div>
+
+    <!-- Views -->
+    <div class="card-grid" id="mainGrid"></div>
+    <div class="card-list hidden" id="mainList"></div>
+
+    <div class="empty-state hidden" id="emptyState"><div class="icon">🌙</div><div>No artworks match your filters.</div></div>
+    <button class="load-more hidden" id="loadMore">Load More ↓</button>
+    <div class="spacer"></div>
   </div>
 
-  <script src="config.js"></script>
-  <script src="script.js"></script>
-  <script>
-    let ALL_DATA = [];
-    let filtered = [];
-    let currentCat = "all";
-    let currentSort = "default";
-    let showFeaturedOnly = false;
-    let showLikedOnly = false;
-    let isGridView = true;
-    let page = 0;
-    const PER = CONFIG.itemsPerPage;
+  <footer>
+    <div class="logo">✦ Gallery Codex</div>
+    <p>All art belongs to their respective artists.</p>
+    <p style="margin-top:6px"><a href="#" id="footerForm" style="color:var(--primary2)">Submit your artwork →</a></p>
+  </footer>
+</div>
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      ALL_DATA = await loadGalleryData();
-      document.getElementById("submitBtn").href = CONFIG.FORM_URL;
-      document.getElementById("footerForm").href = CONFIG.FORM_URL;
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="bnav-item" href="index.html"><span class="bnav-icon">🏠</span>Home</a>
+    <a class="bnav-item" href="category.html"><span class="bnav-icon">🗂️</span>Categories</a>
+    <a class="bnav-item active" href="gallery.html"><span class="bnav-icon">🖼️</span>Gallery</a>
+    <button class="bnav-item" onclick="toggleTheme()"><span class="bnav-icon">☀️</span>Theme</button>
+  </div>
+</nav>
 
-      buildPills();
-      applyAll();
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+  let ALL_DATA = [];
+  let filtered = [];
+  let currentCat = "all";
+  let currentSort = "default";
+  let showFeatured = false;
+  let showLiked = false;
+  let isGrid = true;
+  let page = 0;
+  const PER = CONFIG.itemsPerPage;
 
-      // Search
-      document.getElementById("gallerySearch").addEventListener("input", () => {
-        page = 0; applyAll();
-      });
+  async function init() {
+    ALL_DATA = await loadGalleryData();
+    document.getElementById("submitBtn").href = CONFIG.FORM_URL;
+    document.getElementById("footerForm").href = CONFIG.FORM_URL;
+    buildPills();
+    applyAll();
+    checkUrlId(ALL_DATA);
+  }
 
-      // Sort
-      document.getElementById("sortSelect").addEventListener("change", e => {
-        currentSort = e.target.value; page = 0; applyAll();
-      });
+  document.addEventListener("DOMContentLoaded", () => {
+    init();
 
-      // View toggle
-      document.getElementById("gridView").addEventListener("click", () => {
-        isGridView = true;
-        document.getElementById("gridView").classList.add("active");
-        document.getElementById("listView").classList.remove("active");
-        document.getElementById("mainGrid").classList.remove("hidden");
-        document.getElementById("mainList").classList.add("hidden");
-      });
-      document.getElementById("listView").addEventListener("click", () => {
-        isGridView = false;
-        document.getElementById("listView").classList.add("active");
-        document.getElementById("gridView").classList.remove("active");
-        document.getElementById("mainList").classList.remove("hidden");
-        document.getElementById("mainGrid").classList.add("hidden");
-      });
+    document.getElementById("gallerySearch").addEventListener("input", () => { page=0; applyAll(); });
+    document.getElementById("sortSelect").addEventListener("change", e => { currentSort=e.target.value; page=0; applyAll(); });
 
-      // Featured toggle
-      document.getElementById("featuredChip").addEventListener("click", e => {
-        showFeaturedOnly = !showFeaturedOnly;
-        e.currentTarget.dataset.on = showFeaturedOnly;
-        e.currentTarget.classList.toggle("on", showFeaturedOnly);
-        page = 0; applyAll();
-      });
-
-      // Liked toggle
-      document.getElementById("likedChip").addEventListener("click", e => {
-        showLikedOnly = !showLikedOnly;
-        e.currentTarget.dataset.on = showLikedOnly;
-        e.currentTarget.classList.toggle("on", showLikedOnly);
-        page = 0; applyAll();
-      });
-
-      // Load more
-      document.getElementById("loadMore").addEventListener("click", () => {
-        page++; showPage(true);
-      });
+    // View toggle
+    document.getElementById("gridView").addEventListener("click", () => {
+      isGrid=true;
+      document.getElementById("gridView").classList.add("active");
+      document.getElementById("listView").classList.remove("active");
+      document.getElementById("mainGrid").classList.remove("hidden");
+      document.getElementById("mainList").classList.add("hidden");
+    });
+    document.getElementById("listView").addEventListener("click", () => {
+      isGrid=false;
+      document.getElementById("listView").classList.add("active");
+      document.getElementById("gridView").classList.remove("active");
+      document.getElementById("mainList").classList.remove("hidden");
+      document.getElementById("mainGrid").classList.add("hidden");
     });
 
-    function buildPills() {
-      const pills = document.getElementById("catPills");
-      pills.innerHTML = "";
-      const cats = ["all", ...new Set(ALL_DATA.map(d => d.category).filter(Boolean))];
-      cats.forEach(cat => {
-        const btn = document.createElement("button");
-        btn.className = "cat-pill" + (cat === "all" ? " active" : "");
-        const meta = CONFIG.categories.find(c => c.id === cat);
-        btn.textContent = meta ? `${meta.icon} ${meta.label}` : cat.charAt(0).toUpperCase() + cat.slice(1);
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
-          btn.classList.add("active");
-          currentCat = cat; page = 0; applyAll();
-        });
-        pills.appendChild(btn);
+    // Filter chips
+    document.getElementById("featuredChip").addEventListener("click", e => {
+      showFeatured=!showFeatured; e.currentTarget.classList.toggle("on",showFeatured); page=0; applyAll();
+    });
+    document.getElementById("likedChip").addEventListener("click", e => {
+      showLiked=!showLiked; e.currentTarget.classList.toggle("on",showLiked); page=0; applyAll();
+    });
+
+    document.getElementById("loadMore").addEventListener("click", () => { page++; showPage(true); });
+    window.addEventListener("codex:refresh", () => init());
+  });
+
+  function buildPills() {
+    const pills = document.getElementById("catPills");
+    pills.innerHTML = "";
+    const cats = ["all", ...new Set(ALL_DATA.map(d => d.category).filter(Boolean))];
+    cats.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "cat-pill" + (cat === currentCat ? " active" : "");
+      const meta = CONFIG.categories.find(c => c.id === cat);
+      btn.textContent = meta ? `${meta.icon} ${meta.label}` : cat.charAt(0).toUpperCase() + cat.slice(1);
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        currentCat = cat; page = 0; applyAll();
       });
+      pills.appendChild(btn);
+    });
+  }
+
+  function applyAll() {
+    const q = document.getElementById("gallerySearch").value.toLowerCase().trim();
+    let data = currentCat === "all" ? [...ALL_DATA] : ALL_DATA.filter(d => d.category === currentCat);
+    if (showFeatured) data = data.filter(d => d.featured === "true");
+    if (showLiked)    data = data.filter(d => isLiked(d.id));
+    if (q) data = data.filter(d =>
+      d.title.toLowerCase().includes(q) ||
+      (d.artist||"").toLowerCase().includes(q) ||
+      (d.tags||"").toLowerCase().includes(q) ||
+      (d.category||"").toLowerCase().includes(q)
+    );
+    if (currentSort === "az")       data.sort((a,b) => a.title.localeCompare(b.title));
+    else if (currentSort === "za")  data.sort((a,b) => b.title.localeCompare(a.title));
+    else if (currentSort === "cat") data.sort((a,b) => (a.category||"").localeCompare(b.category||""));
+    else if (currentSort === "featured") data.sort((a,b) => (b.featured==="true")-(a.featured==="true"));
+    filtered = data; page = 0; showPage(false);
+  }
+
+  function showPage(append) {
+    const grid = document.getElementById("mainGrid");
+    const list = document.getElementById("mainList");
+    const emptyEl = document.getElementById("emptyState");
+    const loadBtn = document.getElementById("loadMore");
+    const countEl = document.getElementById("resultCount");
+
+    if (!append) { grid.innerHTML = ""; list.innerHTML = ""; }
+
+    if (filtered.length === 0) {
+      emptyEl.classList.remove("hidden"); countEl.textContent = "";
+      loadBtn.classList.add("hidden"); return;
     }
+    emptyEl.classList.add("hidden");
 
-    function applyAll() {
-      const q = document.getElementById("gallerySearch").value.toLowerCase().trim();
-      let data = currentCat === "all" ? [...ALL_DATA] : ALL_DATA.filter(d => d.category === currentCat);
-      if (showFeaturedOnly) data = data.filter(d => d.featured === "true");
-      if (showLikedOnly) data = data.filter(d => isLiked(d.id));
-      if (q) data = data.filter(d =>
-        d.title.toLowerCase().includes(q) ||
-        (d.artist || "").toLowerCase().includes(q) ||
-        (d.tags || "").toLowerCase().includes(q) ||
-        (d.category || "").toLowerCase().includes(q)
-      );
+    const start = page * PER;
+    const slice = filtered.slice(start, start + PER);
+    const shown = Math.min((page+1)*PER, filtered.length);
+    countEl.textContent = `Showing ${shown} of ${filtered.length} artworks`;
 
-      // Sort
-      if (currentSort === "az") data.sort((a,b) => a.title.localeCompare(b.title));
-      else if (currentSort === "za") data.sort((a,b) => b.title.localeCompare(a.title));
-      else if (currentSort === "cat") data.sort((a,b) => (a.category||"").localeCompare(b.category||""));
-      else if (currentSort === "featured") data.sort((a,b) => (b.featured==="true")-(a.featured==="true"));
+    // Grid items
+    slice.forEach((item, i) => grid.appendChild(buildCard(item, append ? i : start+i)));
 
-      filtered = data;
-      page = 0;
-      showPage(false);
-    }
-
-    function showPage(append) {
-      const grid = document.getElementById("mainGrid");
-      const list = document.getElementById("mainList");
-      const emptyEl = document.getElementById("emptyState");
-      const loadBtn = document.getElementById("loadMore");
-      const countEl = document.getElementById("resultCount");
-
-      if (!append) { grid.innerHTML = ""; list.innerHTML = ""; }
-
-      if (filtered.length === 0) {
-        emptyEl.classList.remove("hidden");
-        countEl.textContent = "";
-        loadBtn.classList.add("hidden");
-        return;
-      }
-      emptyEl.classList.add("hidden");
-
-      const start = page * PER;
-      const slice = filtered.slice(start, start + PER);
-      const shown = Math.min((page + 1) * PER, filtered.length);
-      countEl.textContent = `Showing ${shown} of ${filtered.length} artworks`;
-
-      // Grid view
-      slice.forEach((item, i) => grid.appendChild(buildCard(item, append ? i : start + i)));
-
-      // List view
-      slice.forEach((item, i) => {
-        const div = document.createElement("div");
-        div.className = "list-card";
-        div.style.animationDelay = `${i * 0.04}s`;
-        const liked = isLiked(item.id);
-        div.innerHTML = `
-          <img class="list-card-img" src="${item.image}" alt="${item.title}" loading="lazy"
-               onerror="this.src='https://picsum.photos/seed/${item.id}/200/200'">
-          <div class="list-card-info">
-            <div class="list-card-title">${item.title}</div>
-            <div class="list-card-meta">by ${item.artist || "Unknown"}</div>
-            <span class="list-card-cat">${item.category}</span>
-          </div>
-          <button class="list-card-like" data-id="${item.id}">${liked ? "♥" : "♡"}</button>
-        `;
-        div.querySelector(".list-card-info").addEventListener("click", () => openModal(item));
-        div.querySelector("img").addEventListener("click", () => openModal(item));
-        div.querySelector(".list-card-like").addEventListener("click", e => {
-          const nowLiked = toggleLike(item.id);
-          e.currentTarget.textContent = nowLiked ? "♥" : "♡";
-          e.currentTarget.style.color = nowLiked ? "var(--accent1)" : "";
-        });
-        list.appendChild(div);
+    // List items
+    slice.forEach((item, i) => {
+      const liked = isLiked(item.id);
+      const div = document.createElement("div");
+      div.className = "list-card";
+      div.style.animationDelay = `${i*0.04}s`;
+      div.innerHTML = `
+        <img class="list-card-img" src="${item.image}" alt="${item.title}" loading="lazy"
+             onerror="this.src='https://picsum.photos/seed/${item.id}x/200/200'">
+        <div class="list-card-info">
+          <div class="list-card-title">${item.title}</div>
+          <div class="list-card-meta">by ${item.artist||"Unknown"}</div>
+          <span class="list-card-cat">${item.category||""}</span>
+        </div>
+        <button class="list-card-like" title="Like" aria-label="Like">${liked?"♥":"♡"}</button>
+      `;
+      div.querySelector(".list-card-info").addEventListener("click", () => openModal(item));
+      div.querySelector(".list-card-img").addEventListener("click", () => openModal(item));
+      div.querySelector(".list-card-like").addEventListener("click", e => {
+        const nowLiked = toggleLike(item.id);
+        e.currentTarget.textContent = nowLiked ? "♥" : "♡";
+        e.currentTarget.style.color = nowLiked ? "var(--accent1)" : "";
       });
+      list.appendChild(div);
+    });
 
-      if (shown < filtered.length) loadBtn.classList.remove("hidden");
-      else loadBtn.classList.add("hidden");
-    }
-  </script>
+    if (shown < filtered.length) loadBtn.classList.remove("hidden");
+    else loadBtn.classList.add("hidden");
+  }
+</script>
 </body>
 </html>
