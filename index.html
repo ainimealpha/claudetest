@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Codex — Anime Art Universe</title>
+  <meta name="description" content="Discover and explore curated anime artwork in the Gallery Codex — your fantasy anime art universe.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background atmosphere -->
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="stars"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a class="nav-logo" href="index.html">✦ Gallery Codex</a>
+    <div class="nav-links">
+      <a class="nav-link active" href="index.html">Home</a>
+      <a class="nav-link" href="category.html">Categories</a>
+      <a class="nav-link" href="gallery.html">Gallery</a>
+    </div>
+    <a class="nav-btn" href="#" id="submitBtn">+ Submit</a>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow">✦ ANIME ART ARCHIVE ✦</div>
+      <h1 class="hero-title">Gallery<br>Codex</h1>
+      <p class="hero-sub">A dreamy archive of anime art. Discover, explore, and collect your favorites from every realm.</p>
+
+      <!-- Search -->
+      <div class="hero-search">
+        <div class="search-wrap">
+          <input class="search-input" id="heroSearch" type="text" placeholder="Search titles, artists, tags…">
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+
+      <!-- Stats (filled dynamically) -->
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num" id="statArt">—</div><div class="stat-label">Artworks</div></div>
+        <div class="stat"><div class="stat-num" id="statCat">—</div><div class="stat-label">Categories</div></div>
+        <div class="stat"><div class="stat-num" id="statFeat">—</div><div class="stat-label">Featured</div></div>
+      </div>
+    </section>
+
+    <div class="container">
+
+      <!-- Featured scrollable row -->
+      <section class="reveal" style="margin-bottom:36px;">
+        <div class="section-title" style="margin-bottom:16px;">✦ Featured Works</div>
+        <div class="featured-row" id="featuredRow">
+          <!-- skeleton loaders -->
+          <div class="skeleton" style="width:200px;height:280px;flex-shrink:0;border-radius:16px;"></div>
+          <div class="skeleton" style="width:200px;height:280px;flex-shrink:0;border-radius:16px;"></div>
+          <div class="skeleton" style="width:200px;height:280px;flex-shrink:0;border-radius:16px;"></div>
+        </div>
+      </section>
+
+      <!-- Category filter pills -->
+      <section class="reveal" style="margin-bottom:20px;">
+        <div class="cat-pills" id="catPills"></div>
+      </section>
+
+      <!-- Gallery heading + count -->
+      <div class="reveal" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <div class="section-title">✦ All Works</div>
+        <span style="color:var(--text3);font-size:0.82rem;" id="resultCount"></span>
+      </div>
+
+      <!-- Main grid -->
+      <div class="card-grid" id="mainGrid">
+        <!-- skeleton placeholders -->
+        <div class="skeleton"></div><div class="skeleton"></div>
+        <div class="skeleton"></div><div class="skeleton"></div>
+        <div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+
+      <div class="empty-state hidden" id="emptyState">
+        <div class="icon">🌌</div>
+        <div>No artworks found in this realm.</div>
+      </div>
+
+      <!-- Load more -->
+      <button class="load-more hidden" id="loadMore">Load More ↓</button>
+
+      <div class="spacer"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="logo">✦ Gallery Codex</div>
+      <p>A curated fantasy anime archive. All art belongs to their respective artists.</p>
+      <p style="margin-top:8px;">Built for GitHub Pages · <a href="#" id="footerForm" style="color:var(--primary2);">Submit your art →</a></p>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // ── Index page logic ──────────────────────────────────────
+    let ALL_DATA = [];
+    let filtered = [];
+    let currentCat = "all";
+    let page = 0;
+    const PER_PAGE = CONFIG.itemsPerPage;
+
+    // Init
+    document.addEventListener("DOMContentLoaded", async () => {
+      ALL_DATA = await loadGalleryData();
+      updateStats();
+      renderFeatured();
+      buildCategoryPills();
+      applyFilter("all");
+
+      // Submit button → form link
+      document.getElementById("submitBtn").href = CONFIG.FORM_URL;
+      document.getElementById("footerForm").href = CONFIG.FORM_URL;
+
+      // Hero search
+      const heroSearch = document.getElementById("heroSearch");
+      heroSearch.addEventListener("input", () => {
+        const q = heroSearch.value.toLowerCase().trim();
+        if (q.length === 0) { applyFilter(currentCat); return; }
+        filtered = ALL_DATA.filter(d =>
+          d.title.toLowerCase().includes(q) ||
+          (d.artist || "").toLowerCase().includes(q) ||
+          (d.tags || "").toLowerCase().includes(q) ||
+          (d.category || "").toLowerCase().includes(q)
+        );
+        page = 0;
+        showPage();
+      });
+
+      // Load more
+      document.getElementById("loadMore").addEventListener("click", () => {
+        page++;
+        showPage(true);
+      });
+    });
+
+    function updateStats() {
+      const cats = new Set(ALL_DATA.map(d => d.category).filter(Boolean));
+      const feat = ALL_DATA.filter(d => d.featured === "true").length;
+      document.getElementById("statArt").textContent = ALL_DATA.length;
+      document.getElementById("statCat").textContent = cats.size;
+      document.getElementById("statFeat").textContent = feat;
+    }
+
+    function renderFeatured() {
+      const row = document.getElementById("featuredRow");
+      row.innerHTML = "";
+      ALL_DATA.filter(d => d.featured === "true").slice(0, 8).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "featured-card";
+        card.innerHTML = `
+          <img src="${item.image}" alt="${item.title}" loading="lazy"
+               onerror="this.src='https://picsum.photos/seed/${item.id}/400/560'">
+          <div class="card-overlay">
+            <div class="card-title">${item.title}</div>
+            <div class="card-cat">${item.category}</div>
+          </div>
+        `;
+        card.addEventListener("click", () => openModal(item));
+        row.appendChild(card);
+      });
+    }
+
+    function buildCategoryPills() {
+      const pills = document.getElementById("catPills");
+      pills.innerHTML = "";
+      const cats = ["all", ...new Set(ALL_DATA.map(d => d.category).filter(Boolean))];
+      cats.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "cat-pill" + (cat === "all" ? " active" : "");
+        const meta = CONFIG.categories.find(c => c.id === cat);
+        btn.textContent = meta ? `${meta.icon} ${meta.label}` : cat.charAt(0).toUpperCase() + cat.slice(1);
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
+          btn.classList.add("active");
+          currentCat = cat;
+          document.getElementById("heroSearch").value = "";
+          applyFilter(cat);
+        });
+        pills.appendChild(btn);
+      });
+    }
+
+    function applyFilter(cat) {
+      currentCat = cat;
+      filtered = cat === "all" ? [...ALL_DATA] : ALL_DATA.filter(d => d.category === cat);
+      page = 0;
+      showPage();
+    }
+
+    function showPage(append = false) {
+      const grid = document.getElementById("mainGrid");
+      const start = page * PER_PAGE;
+      const slice = filtered.slice(start, start + PER_PAGE);
+      const countEl = document.getElementById("resultCount");
+      const loadBtn = document.getElementById("loadMore");
+      const emptyEl = document.getElementById("emptyState");
+
+      if (!append) grid.innerHTML = "";
+
+      if (filtered.length === 0) {
+        emptyEl.classList.remove("hidden");
+        countEl.textContent = "";
+        loadBtn.classList.add("hidden");
+        return;
+      }
+      emptyEl.classList.add("hidden");
+
+      // Count display
+      const shown = Math.min((page + 1) * PER_PAGE, filtered.length);
+      countEl.textContent = `${shown} / ${filtered.length} works`;
+
+      slice.forEach((item, i) => grid.appendChild(buildCard(item, append ? i : page * PER_PAGE + i)));
+
+      // Load more visibility
+      if (shown < filtered.length) loadBtn.classList.remove("hidden");
+      else loadBtn.classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
